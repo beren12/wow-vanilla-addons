@@ -1,0 +1,6 @@
+## Interface: 11200
+## Title: !MCP [|cFFFF8080Basara Ed|r]
+## Author: Marc aka Saien of Hyjal modified by Dym aka Basara of Emerald Dream
+## Notes: Master Control Program allows enabling/disabling addons in game without logging out. Read readmeMCP.txt for more information.
+## SavedVariables: MCP_Config
+MCP.xml

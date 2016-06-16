@@ -1,0 +1,9 @@
+## Interface: 11000
+## Title: EngInventory
+## Notes: AutoSorting Inventory Replacement - 20060329
+## RequiredDeps: 
+## OptionalDeps: lootlink, auctioneer, equipcompare
+## SavedVariables: EngInventoryConfig
+## Dependencies: 
+enginventory.xml
+ei_options.xml

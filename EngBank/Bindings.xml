@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="EB_TOGGLE" header="EngBank">
+		EngBank_OpenOrClose("toggle");
+	</Binding>
+</Bindings>

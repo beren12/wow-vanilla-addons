@@ -1,0 +1,14 @@
+v3.0a
+- Updated TOC for v3 of WoW
+
+v2.3a
+- Changed versioning to reflect version of WoW (2.3) + Addon Revision (a)
+- When a scheduled save comes around and the player is dead, the save is now deferred and executed when the player comes back to life instead of just getting skipped.
+- Added a /save command
+
+v0.02
+- Cleaned code (a little)
+- Fixed error when auto-saving while player is dead
+
+v0.01
+- Original Release

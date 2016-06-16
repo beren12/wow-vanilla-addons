@@ -1,0 +1,21 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<Script file="auctions_frame.lua"/>
+
+    <Frame name="AuxAuctionsFrame" hidden="true" parent="AuxFrame" setAllPoints="true">
+		<Scripts>
+			<OnUpdate>
+				Aux.auctions_frame.on_update()
+			</OnUpdate>
+		</Scripts>
+		<Frames>
+			<Frame name="$parentListing" inherits="AuxFrameBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="AuxFrame"><Offset><AbsDimension x="0" y="-8"/></Offset></Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="AuxFrameContent"></Anchor>
+					<Anchor point="BOTTOMRIGHT" relativeTo="AuxFrameContent"></Anchor>
+				</Anchors>
+			</Frame>
+		</Frames>
+	</Frame>
+</Ui>

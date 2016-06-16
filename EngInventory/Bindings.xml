@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="EI_TOGGLE" header="ENGINVENTORY">
+		EngInventory_OpenOrClose("toggle");
+	</Binding>
+</Bindings>

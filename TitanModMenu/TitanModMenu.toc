@@ -1,0 +1,7 @@
+## Interface: 1700
+## Title: Titan Plugin - Mod Menu
+## Notes: A Titan Plugin creates a menu to open other mods with.
+## Author: tekkub@gmail.com
+## Dependencies: Titan
+## SavedVariables: TitanModMenu_modsets, TitanModMenu_loadedset
+TitanModMenu.xml

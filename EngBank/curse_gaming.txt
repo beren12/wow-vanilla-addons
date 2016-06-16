@@ -1,0 +1,102 @@
+This is an inventory replacement, which merges all bags into one, and seperate your items into a sorted view.
+
+2005/08/24:
+Still working on it..  Lots of changes to come.
+
+Sorry for the buggy 20050822 version.  I did a lot of changes to it and as a bit too eager to upload it, but it had some serious flaws with config data.  (the data was set during development on my system, but failed to start up properly on clean installs)
+
+The latest version is going to reset your config for you, in part to wipe out any lingering bugs due to bad data, and also because of the many changes.  Sorry for messing up your customization.  I'll try to keep the settings wipes to a very very minimum.
+
+Need help:
+I need item ID's of all the class items.  To do this, go in edit mode, right click on your item, and hover over "debug info".  For example, a warlock's Infernal Stone has an item link of 5565:0:0:0
+
+Big question:  are all the item ID's the same on every server and every localization?  I tried the mod on a "private server", and the item ID's don't match at all.  I want to know if I've just created more problems by using ID's instead of actual names.  If they don't match, let me know and I'll switch the code back to using names.
+
+LOCALIZATION:  (non-english will have strange behavior)
+
+At this point, localization is hopelessly messed up.  I'm using the english player class names and trade skills, so these features won't work properly.  For trade skills, you're going to get a freaky reset everytime you load.  Does anyone want to take on the localization work for this?
+
+
+
+Usage:
+
+Just unzip to your addons directory, and make sure you're not using another inventory replacement.
+
+Open your bags with your normal hotkey (B), or press any of the bag icons.  Make sure your hotkey is bound to "Open backpack", and not something like "Open all bags", or the window won't close when you use your hotkey.
+
+in-game config:
+press the "edit" button.  Click on an item to select it's class, then click on a numbered target to put that class in that location.  You can also right click on the numbered targets for more options, or to select a class that you have no items of.
+
+You can also right click on many different things for some more options. When not in edit mode, you can only right click on the main window.  In edit mode, you can right click on any button or numbered target.
+
+For configuration menu, right click anywhere in the main window, and click on "Advanced Configuration"
+
+
+The matching algorithm:
+
+During an inventory resort, the follow procedure occurs:
+
+1. It looks for the item in the "override placement list".  When you right click an item (in edit mode), and select to override it's placement into a specific catagory, this is where it gets matched.  This is top priority.
+
+2. It searches through the "Item Search and Assignment" list as seen in the config window.  It will use the first matching catagory that it finds, unless that catagory is not linked to a bar.  By default, class items are not linked to a bar, unless it's your current player class.  (You'll be able to change this behavior in the future).  All items in the list must match for the line to be a successful match.
+- Keywords: These are special keywords as defined in various parts of the code.  In edit mode, right click on an item, and look at the debug info.  You'll see a list of keywords that the item matched.  Every item gets the keyword ITEMRARITY_# .. By default, I'm only matching ITEMRARITY_0 to the "GRAY_ITEMS" catagory, but you could add more matching lines to, for example, move epics and such into their own spot.
+- Tooltip Search: During the matching, the default game tooltip is loaded into a hidden control, and is checked against this using the string.find() library function.  Any valid pattern match would work here.  (do NOT ask me for a tutorial on regular expressions. See http://www.regular-expressions.info/ .. if you don't understand it, just keep your string searches to something simple.)
+- ItemType: This matches the itemType string as returned by a WoW API function.  This is a direct string compare, so no regex patterns.  Again, you can view the item type for something specific in the right-click=>debug info list)
+At this point, if no match is found, the item is placed in OTHERORUNKNOWN.
+
+I currently don't have any way for you to add a line to the list.  I'm working on it.
+
+
+
+command line switches:
+
+/ei lock   -- lock window
+/ei unlock   -- unlock window
+/ei scale 0.64  -- change the window scale between 0.64 and 1.00
+/ei resetdefaults  -- reload default settings
+/ei config  -- opens config window
+
+
+
+TODO:
+*** Must keep on top of localization.  I added so much stuff too quickly, and missed quite a few strings in the localization file.  I'll clean it up...  It will also need more translation.
+- Need complete lists of class items, so far I just have a few, and it's incomplete.  (I'm doing this by item ID, not by item name)
+- Textures
+- French localization
+- Bag Icons
+- Create a seperate bar for new items
+- Add option to change the window anchor position.  (Currently locked to bottom right)
+- Add buttons to add or delete items in the search list (as seen at the bottom of the configuration screen)
+- Use a proper scroll frame for the scroll bar (hopefully the mouse wheel would work after)
+- Make a check for catagories that don't have a bar asignment, and give them a default value
+- Check for catagories that aren't used at all, and wipe them out
+- Make a "sort now" button
+- Give some options in the config screen to change when to auto-sort.
+ ie: "sort always unless at vendor", "sort only on bag open", ...
+- Add checkboxes and dropdown lists to my config templates
+- Per Player/per server config
+** Document how the search list works.  I'm sure I'll be bombarded by questions because people don't understand it.  (Could someone else figure it out and do a long post in the comments section?  :)  )
+
+
+Suggestions under consideration:
+- Integration with bank to provide same functionality.
+  (I'll look into this once I'm done with some of the above TODO's)
+
+Things I don't want to do:
+- Autoselling items
+
+Mods that work by themselves, with no extra code in my mod:
+- KC_Items
+- ReagentInfo
+
+
+Credits:
+Roktarr
+- German localization!
+- Note: He worked on one of the first versions.  I've added so much stuff, completely messing up his work.  I've asked him to wait before doing more translations, as I'm still adding things to the localization file.
+Sarf of AllInOneInventory
+- Used AIOI as a learning base, and some pieces of code have been completely cut'n'pasted.
+Lozareth of Discord Action Bars
+- Ripped your font and learned how to make a big number inside a button
+Pingbo
+- Made Packrat work

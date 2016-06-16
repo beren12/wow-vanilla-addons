@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: AutoMate
+## Author: Wayleran
+## Version: 1.0.0
+## Notes: AddOn Organizer, AutoDismount, AutoDuelDecline, AutoFilterAvailable, AutoNameplates, AutoRepair, AutoSellJunk, AutoSkipGossip, ChatClean, ChatScroll, ErrorFilter, EquipCompare, Improved RightClick, Improved UnitFrames, QuickLoot, RangeColor, and more...
+## DefaultState: Enabled
+## SavedVariables: AutoMate, AddOns_Profiles, Error_Filters
+AutoMate.xml

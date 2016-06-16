@@ -1,0 +1,2165 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
+	<Script file="AutoMate.lua"/>
+	<Frame name="AutoMate">
+		<Scripts>
+			<OnLoad>
+				AutoMate_OnLoad()
+			</OnLoad>
+			<OnEvent>
+				AutoMate_OnEvent(event)
+			</OnEvent>
+			<OnUpdate>
+				AutoMate_OnUpdate()
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+<!-- UnitFrames -->
+	<Frame name="AutoMate_TargetFrameHealthBar" hidden="false" parent="TargetFrameHealthBar">
+		<Size>
+			<AbsDimension x="235" y="100"/>
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT">
+				<Offset>
+					<AbsDimension x="-15" y=".5"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentText"/>
+			</Layer>
+		</Layers>
+	</Frame>
+<!-- Options Menu -->
+	<Frame name="AutoMateOptions" toplevel="true" frameStrata="HIGH" movable="true" enableMouse="true" hidden="true" parent="UIParent" enableKeyboard="true">
+		<TitleRegion setAllPoints="true"/>
+		<Size>
+			<AbsDimension x="400" y="565"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="AutoMateOptionsHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="280" y="65"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="AutoMateOptions" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentText" inherits="GameFontNormal" text="AutoMate Options">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="AutoMateOptionsHeader">
+							<Offset>
+								<AbsDimension x="-1" y="-14"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="AutoMateBox" inherits="OptionFrameBoxTemplate">
+				<Size>
+					<AbsDimension x="375" y="145"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="AutoMateOptions">
+						<Offset>
+							<AbsDimension x="0" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormal" text ="AutoMate">
+							<Color r="1.0" g="1.0" b="1.0"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="AutoMateBox" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						this:SetBackdropBorderColor(0.5, 0.5, 0.5)
+						this:SetBackdropColor(0.2, 0.2, 0.2)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="AutoDismount" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Auto Dismount">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoDismount" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically dismounts you when casting\na spell or selecting a flight path")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.Dismount = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.Dismount) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoDuelDecline" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text="Auto Duel Decline">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoDuelDecline" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically declines duels")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.DuelDecline = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.DuelDecline) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoFilterAvailable" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text="Auto Filter Available">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoFilterAvailable" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically filters only available\nskills at a trainer\nClick anywhere outside of the window\nto show all skills")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.FilterAvailable = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.FilterAvailable) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoSkipGossip" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-110"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text="Auto Skip Gossip">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoSkipGossip" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically skip gossip when talking to\nvendors/trainers/flight masters unless\nSHIFT is held to override")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.SkipGossip = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.SkipGossip) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoNameplates" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text="Auto Nameplates">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoNameplates" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically enables enemy nameplates\nwhen in combat and disables them when\nout of combat")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.Nameplates = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.Nameplates) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoRepair" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Auto Repair">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoRepair" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically repairs all items\nwhen talking to a merchant")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.Repair = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.Repair) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="AutoSellJunk" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AutoMateBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Auto Sell Junk">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AutoSellJunk" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Automatically sells grey items\nwhen talking to a merchant")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.SellJunk = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.SellJunk) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<Frame name="ChatBox" inherits="OptionFrameBoxTemplate">
+				<Size>
+					<AbsDimension x="375" y="75"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="AutoMateBox" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormal" text ="Chat">
+							<Color r="1.0" g="1.0" b="1.0"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="ChatBox" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						this:SetBackdropBorderColor(0.5, 0.5, 0.5)
+						this:SetBackdropColor(0.2, 0.2, 0.2)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="ChatClean" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ChatBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Chat Clean">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="ChatClean" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Remove unneeded channel titles like\n[GUILD], [PARTY], [RAID]")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.ChatClean = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.ChatClean) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="ChatScroll" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ChatBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Chat Scroll">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="ChatScroll" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Mousewheel scrolling of chat windows\nHold shift to quickly scroll to the top\nor bottom of the chat window")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.ChatScroll = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.ChatScroll) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="ShortenChannelNames" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ChatBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Shorten Channel Names">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="ShortenChannelNames" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Shorten public channel names\nto [1.], [2.], etc...")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.ShortenChannelNames = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.ShortenChannelNames) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<Frame name="RightClickBox" inherits="OptionFrameBoxTemplate">
+				<Size>
+					<AbsDimension x="375" y="75"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="ChatBox" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormal" text ="Right Click">
+							<Color r="1.0" g="1.0" b="1.0"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="RightClickBox" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						this:SetBackdropBorderColor(0.5, 0.5, 0.5)
+						this:SetBackdropColor(0.2, 0.2, 0.2)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="AuctionHouse" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="RightClickBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Auction House">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="AuctionHouse" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Shift right click to search for item\nShift right click to split stacks\nRight click to sell item")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.AuctionHouse = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.AuctionHouse) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="MailBox" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="RightClickBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Mail Box">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="MailBox" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Right Click to collect mail\nShift Right Click to quickly send items\nand save mail recipient")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.MailBox = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.MailBox) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="PlayerLink" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="RightClickBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text="PlayerLink">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="PlayerLink" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Right click on portrait or name\nin chat for extended options\nRequires reload to take effect")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.PlayerLink = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.PlayerLink) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="Trade" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="RightClickBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Trade">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="Trade" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Right click to trade item")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.Trade = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.Trade) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<Frame name="MiscBox" inherits="OptionFrameBoxTemplate">
+				<Size>
+					<AbsDimension x="375" y="110"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="RightClickBox" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormal" text ="Misc.">
+							<Color r="1.0" g="1.0" b="1.0"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="MiscBox" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						this:SetBackdropBorderColor(0.5, 0.5, 0.5)
+						this:SetBackdropColor(0.2, 0.2, 0.2)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="ErrorFilter" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Error Filter">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="ErrorFilter" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Filters out red error messages on-screen\nUse /ef for more options")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.ErrorFilter = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.ErrorFilter) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="EquipCompare" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Equip Compare">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="EquipCompare" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Hold shift to see currently equipped items")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.EquipCompare = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.EquipCompare) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="MinimapButton" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="10" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Minimap Button">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="MinimapButton" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Turns the minimap button on or off")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.MinimapButton = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.MinimapButton) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="QuickLoot" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-5"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Quick Loot">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="QuickLoot" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Moves the loot window under the cursor\nRequires restart if disabled")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.QuickLoot = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.QuickLoot) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="RangeColor" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Range Color">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="RangeColor" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Fades out skills that are unavailable")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.RangeColor = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.RangeColor) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="UnitFrames" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MiscBox" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="10" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" inherits="GameFontNormalSmall" text ="Unit Frames">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="UnitFrames" relativePoint="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+						GameTooltip:AddLine("Improves text on unit frames and also\nshows useful info on the target frame")
+						GameTooltip:Show()
+					</OnEnter>
+					<OnClick>
+						AutoMate.UnitFrames = (this:GetChecked() == 1)
+					</OnClick>
+					<OnShow>
+						if (AutoMate.UnitFrames) then this:SetChecked(1) else this:SetChecked(0) end
+					</OnShow>
+				</Scripts>
+			</CheckButton>
+			<Button name="AutoMateOptionsOkay" inherits="OptionsButtonTemplate" text="Okay">
+				<Anchors>
+					<Anchor point="BOTTOM" relativeTo="AutoMateOptions" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound("gsTitleOptionExit")
+						AutoMateOptions:Hide()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+<!-- Minimap Button -->
+	<Button name="AutoMateMinimapButton" toplevel="true" frameStrata="LOW" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+		<Size>
+			<AbsDimension x="33" y="33"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="Minimap">
+				<Offset>
+					<AbsDimension x="-27" y="-40"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="AutoMateMinimapButtonIcon" file="Interface\Icons\INV_Gizmo_07">
+					<Size>
+						<AbsDimension x="21" y="21"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="7" y="-6"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size>
+						<AbsDimension x="56" y="56"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("LeftButtonUp","RightButtonUp","MiddleButtonUp")
+				this:RegisterForDrag("RightButton")
+			</OnLoad>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+				GameTooltip:AddLine("AutoMate")
+				GameTooltip:AddLine("Left click to show options")
+				GameTooltip:AddLine("Right click to drag this button")
+				GameTooltip:Show()
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide()
+			</OnLeave>
+			<OnClick>
+				AutoMate_Handler()
+			</OnClick>
+			<OnDragStart>
+				this:StartMoving()
+				GameTooltip:Hide()
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing()
+			</OnDragStop>
+		</Scripts>
+	</Button>
+<!-- AddOns Manager -->
+	<Button name="AddOns_TitleButtonTemplate" toplevel="true" FrameSTRATA="HIGH" virtual="true">
+		<Size>
+			<AbsDimension x="300" y="16"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTag" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="80" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			</OnLoad>
+			<OnClick>
+				PlaySound("igMainMenuOption")
+				AddOns_TitleButton_OnClick()
+			</OnClick>
+			<OnEnter>
+				AddOns_TitleButton_OnEnter()
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide()
+			</OnLeave>
+		</Scripts>
+		<NormalText name="$parentNormalText" inherits="GameFontNormal" justifyH="LEFT" nonspacewrap="true">
+			<Size>
+				<AbsDimension x="275" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="2" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</NormalText>
+		<HighlightText name="$parentHighlightText" inherits="GameFontHighlight" justifyH="LEFT" nonspacewrap="true">
+			<Size>
+				<AbsDimension x="275" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="2" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightText>
+		<DisabledText name="$parentDisabledText" inherits="GameFontHighlight" justifyH="LEFT" nonspacewrap="true">
+			<Size>
+				<AbsDimension x="275" y="15"/>
+			</Size>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="2" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</DisabledText>
+	</Button>
+	<Frame name="AddOns_MenuAddition" parent="GameMenuFrame" toplevel="true" FrameSTRATA="HIGH">
+		<Size>
+			<AbsDimension x="150" y="40"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOP" relativeTo="GameMenuFrame" relativePoint="BOTTOM">
+				<Offset>
+					<AbsDimension x="0" y="12"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\Minimap\TooltipBackdrop-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="4" right="4" top="4" bottom="4"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Frames>
+			<Button name="AddOns_OptionsButton" inherits="GameMenuButtonTemplate" parent="AddOns_MenuAddition" text="AddOns">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="AddOns_MenuAddition" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_ListShowHide()
+						ToggleGameMenu()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+	<Frame name="AddOns_List" enableMouse="true" movable="true" toplevel="true" parent="UIParent" hidden="true">
+		<Size>
+			<AbsDimension x="384" y="512"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="0" y="-104"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<HitRectInsets>
+			<AbsInset left="0" right="30" top="0" bottom="45"/>
+		</HitRectInsets>
+		<Scripts>
+        	<OnLoad>
+            	AddOns_OnLoad()
+				this:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnDragStart>
+				this:StartMoving()
+				this.isMoving = true
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing()
+				this.isMoving = false
+			</OnDragStop>
+			<OnEvent>
+				AddOns_OnEvent(event)
+			</OnEvent>
+		</Scripts>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name = "$parent_Title" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-18"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture file="Interface\MacroFrame\MacroFrame-Icon">
+					<Size>
+						<AbsDimension x="60" y="60"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="7" y="-6"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentTopLeft" file="Interface\PaperDollInfoFrame\UI-Character-General-TopLeft">
+					<Size>
+						<AbsDimension x="256" y="256"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentTopRight" file="Interface\PaperDollInfoFrame\UI-Character-General-TopRight">
+					<Size>
+						<AbsDimension x="128" y="256"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentBottomLeft" file="Interface\FriendsFrame\UI-IgnoreFrame-BotLeft">
+					<Size>
+						<AbsDimension x="256" y="256"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentBottomRight" file="Interface\FriendsFrame\UI-IgnoreFrame-BotRight">
+					<Size>
+						<AbsDimension x="128" y="256"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture name="$parent_CountRight" file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="8" y="20"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="-47" y="-41"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parent_CountMiddle" file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="100" y="20"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parent_CountRight" relativePoint="LEFT"/>
+					</Anchors>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
+				</Texture>
+				<Texture name="$parent_CountLeft" file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="8" y="20"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parent_CountMiddle" relativePoint="LEFT"/>
+					</Anchors>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
+				</Texture>
+				<FontString name="$parent_AddOnCount" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parent_CountRight">
+							<Offset>
+								<AbsDimension x="-6" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parent_Profiles" enableMouse="true" toplevel="true" parent="AddOns_List" hidden="true">
+				<Size>
+					<AbsDimension x="250" y="125"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="AddOns_List">
+						<Offset>
+							<AbsDimension x="-32" y="-32"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\Minimap\TooltipBackdrop-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16"/>
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="4" right="4" top="4" bottom="4"/>
+					</BackgroundInsets>
+				</Backdrop>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parent_Dec1" inherits="GameFontNormalSmall" text="Type a new name into the textbox,">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parent">
+									<Offset>
+										<AbsDimension x="5" y="-5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parent_Dec2" inherits="GameFontNormalSmall" text="press 'Save' to save a new profile.">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Dec1">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox name="SaveProfileEditBox" autoFocus="false" inherits="InputBoxTemplate" letters="25">
+						<Size>
+							<AbsDimension x="235" y="16"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Dec2" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="5" y="-5	"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<FontString inherits="ChatFontNormal" bytes="64"/>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="SaveProfileEditBoxText" inherits="GameFontNormalSmall" justifyH="LEFT">
+									<Size>
+										<AbsDimension x="120" y="20"/>
+									</Size>
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="SaveProfileEditBox" relativePoint="RIGHT">
+											<Offset>
+												<AbsDimension x="0" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</EditBox>
+					<Frame name="ProfilesDropDown" inherits="UIDropDownMenuTemplate" id="1">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Dec2">
+								<Offset>
+									<AbsDimension x="-15" y="-36"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString inherits="GameFontNormalSmall" text="Profiles:">
+									<Anchors>
+										<Anchor point="TOPLEFT">
+											<Offset>
+												<AbsDimension x="20" y="10"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								AddOns_Profiles_ProfilesDropDown_OnLoad()
+							</OnLoad>
+							<OnShow>
+								AddOns_Profiles_ProfilesDropDown_OnLoad()
+							</OnShow>
+						</Scripts>
+					</Frame>
+					<Button name="SaveProfile" inherits="UIPanelButtonTemplate" text="Save">
+						<Size>
+							<AbsDimension x="120" y="21"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="ProfilesDropDown">
+								<Offset>
+									<AbsDimension x="15" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								AddOns_SaveProfile()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="DeleteProfile" inherits="UIPanelButtonTemplate" text="Delete">
+						<Size>
+							<AbsDimension x="120" y="21"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="SaveProfile">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								AddOns_DeleteProfile()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-30" y="-8"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_ListShowHide()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_AcceptButton" inherits="UIPanelButtonTemplate" text="Accept">
+				<Size>
+					<AbsDimension x="131" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="18" y="80"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_AcceptButton_OnClick()
+					</OnClick>
+					<OnEnter>
+						GameTooltip_AddNewbieTip("Accept", 1.0, 1.0, 1.0,"Warning! Some UI's need a restart of WOW in order to work properly!", 1)
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
+				</Scripts>
+			</Button>
+			<Button name="$parent_ReloadUIButton" inherits="UIPanelButtonTemplate" text="ReloadUI">
+				<Size>
+					<AbsDimension x="66" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parent_AcceptButton"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_ReloadUIButton()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_CloseButton2" inherits="UIPanelButtonTemplate" text="Cancel">
+				<Size>
+					<AbsDimension x="131" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-40" y="80"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_ListShowHide()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_EnableAll" inherits="UIPanelButtonTemplate" text="Enable All">
+				<Size>
+					<AbsDimension x="90" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="70" y="-32"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_EnableAll()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_DisableAll" inherits="UIPanelButtonTemplate" text="Disable All">
+				<Size>
+					<AbsDimension x="90" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_EnableAll">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_DisableAll()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_Profile" inherits="UIPanelButtonTemplate" text="Profiles...">
+				<Size>
+					<AbsDimension x="80" y="21"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent_EnableAll">
+						<Offset>
+							<AbsDimension x="0" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AddOns_ProfilesShowHide()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<ScrollFrame name="$parent_Scroll" inherits="FauxScrollFrameTemplate">
+				<Size>
+					<AbsDimension x="296" y="332"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-66" y="-78"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(AddOns_ADDONSLINE_HEIGHT, AddOns_List_Update)
+					</OnVerticalScroll>
+				</Scripts>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parent_BarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size>
+								<AbsDimension x="31" y="256"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="-2" y="5"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size>
+								<AbsDimension x="31" y="108"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+									<Offset>
+										<AbsDimension x="-2" y="-2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.421875"/>
+						</Texture>
+					</Layer>
+				</Layers>
+			</ScrollFrame>
+			<Frame name="$parent_HighlightFrame" hidden="true">
+				<Size>
+					<AbsDimension x="293" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parent_SkillHighlight" file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD"/>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Button name="$parent_Title1" inherits="AddOns_TitleButtonTemplate" id="1" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="19" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title2" inherits="AddOns_TitleButtonTemplate" id="2" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title1" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title3" inherits="AddOns_TitleButtonTemplate" id="3" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title2" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title4" inherits="AddOns_TitleButtonTemplate" id="4" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title3" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title5" inherits="AddOns_TitleButtonTemplate" id="5" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title4" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title6" inherits="AddOns_TitleButtonTemplate" id="6" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title5" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title7" inherits="AddOns_TitleButtonTemplate" id="7" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title6" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title8" inherits="AddOns_TitleButtonTemplate" id="8" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title7" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title9" inherits="AddOns_TitleButtonTemplate" id="9" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title8" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title10" inherits="AddOns_TitleButtonTemplate" id="10" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title9" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title11" inherits="AddOns_TitleButtonTemplate" id="11" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title10" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title12" inherits="AddOns_TitleButtonTemplate" id="12" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title11" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title13" inherits="AddOns_TitleButtonTemplate" id="13" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title12" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title14" inherits="AddOns_TitleButtonTemplate" id="14" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title13" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title15" inherits="AddOns_TitleButtonTemplate" id="15" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title14" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title16" inherits="AddOns_TitleButtonTemplate" id="16" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title15" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title17" inherits="AddOns_TitleButtonTemplate" id="17" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title16" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title18" inherits="AddOns_TitleButtonTemplate" id="18" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title17" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title19" inherits="AddOns_TitleButtonTemplate" id="19" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title18" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title20" inherits="AddOns_TitleButtonTemplate" id="20" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title19" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title21" inherits="AddOns_TitleButtonTemplate" id="21" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title20" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Title22" inherits="AddOns_TitleButtonTemplate" id="22" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Title21" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="1"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
+<!-- EquipCompare -->
+	<Frame name="EquipCompare">
+		<Scripts>
+			<OnLoad>
+				EquipCompare_OnLoad()
+			</OnLoad>
+			<OnEvent>
+				EquipCompare_OnEvent()
+			</OnEvent>
+			<OnUpdate>
+				EquipCompare_OnUpdate()
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+	<GameTooltip name="ComparisonTooltipTemplate" frameStrata="TOOLTIP" hidden="true" virtual="true">
+		<Backdrop name="$parentBackdrop" bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTextLeft0" inherits="GameFontNormalSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="10" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight0" inherits="GameFontNormal" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft0" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft1" inherits="GameFontNormal" hidden="true" justifyV="BOTTOM" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="0" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="10" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight1" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft1" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft2" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft1" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight2" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft2" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft3" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft2" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight3" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft3" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft4" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft3" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight4" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft4" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft5" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft4" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight5" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft5" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft6" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft5" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight6" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft6" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft7" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft6" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight7" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft7" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft8" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft7" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight8" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft8" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft9" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft8" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight9" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft9" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft10" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft9" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight10" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft10" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft11" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft10" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight11" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft11" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft12" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft11" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight12" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft12" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft13" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft12" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight13" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft13" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft14" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft13" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight14" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft14" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft15" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft14" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight15" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft15" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft16" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft15" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight16" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft16" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft17" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft16" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight17" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft17" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft18" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft17" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight18" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft18" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft19" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft18" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight19" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft19" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft20" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft19" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight20" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft20" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft21" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft20" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight21" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft21" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft22" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft21" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight22" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft22" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft23" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft22" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight23" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft23" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextLeft24" inherits="GameTooltipTextSmall" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTextLeft23" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentTextRight24" inherits="GameFontHighlightSmall" hidden="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativeTo="$parentTextLeft24" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="40" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
+				this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
+			</OnLoad>
+		</Scripts>
+	</GameTooltip>
+	<GameTooltip name="ComparisonTooltip1" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="ComparisonTooltipTemplate"/>
+	<GameTooltip name="ComparisonTooltip2" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="ComparisonTooltipTemplate"/>
+</Ui>

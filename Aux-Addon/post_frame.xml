@@ -1,0 +1,53 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<Script file="post_frame.lua"/>
+
+	<Frame name="AuxPostFrame" parent="AuxFrame" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+            <Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="0" y="0"/></Offset></Anchor>
+        </Anchors>
+        <Scripts>
+            <OnUpdate>
+                Aux.post_frame.on_update()
+            </OnUpdate>
+        </Scripts>
+		<Frames>
+            <Frame name="$parentContent" inherits="AuxFrameBoxTemplate">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="AuxFrame"><Offset><AbsDimension x="0" y="-8"/></Offset></Anchor>
+                    <Anchor point="BOTTOMLEFT" relativeTo="AuxFrameContent"></Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="AuxFrameContent"></Anchor>
+                </Anchors>
+                <Frames>
+                    <Frame name="AuxSellInventory" inherits="AuxFrameBoxTemplate">
+                        <Size><AbsDimension x="212"/></Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT"><Offset><AbsDimension x="4" y="-4"/></Offset></Anchor>
+                            <Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="4" y="4"/></Offset></Anchor>
+                        </Anchors>
+                    </Frame>
+                    <frame name="AuxSellParameters" inherits="AuxFrameBoxTemplate">
+                        <Size><AbsDimension y="177"/></Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="AuxSellInventory"><Offset><AbsDimension x="8" y="0"/></Offset></Anchor>
+                            <Anchor point="TOPRIGHT"><Offset><AbsDimension x="-4" y="0"/></Offset></Anchor>
+                        </Anchors>
+                        <frames>
+                            <Frame name="$parentItem" inherits="AuxItemTemplate">
+                                <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="10" y="-10"/></Offset></Anchor></Anchors>
+                            </Frame>
+                        </frames>
+                    </frame>
+                    <Frame name="AuxSellAuctions" inherits="AuxFrameBoxTemplate">
+                        <Size><AbsDimension y="217"/></Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeTo="AuxSellInventory"><Offset><AbsDimension x="8" y="0"/></Offset></Anchor>
+                            <Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-4" y="0"/></Offset></Anchor>
+                        </Anchors>
+                    </Frame>
+                </Frames>
+            </Frame>
+		</Frames>
+	</Frame>
+</Ui>

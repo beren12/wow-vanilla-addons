@@ -1,0 +1,17 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Script file ="localization.lua" />
+	<Script file="AutoSave.lua" />
+	<Frame name="AutoSaveFrame">
+		<Scripts>
+			<OnLoad>
+				AutoSave_OnLoad();
+			</OnLoad>
+			<OnUpdate>
+				AutoSave_OnUpdate(arg1);
+			</OnUpdate>
+			<OnEvent>
+				AutoSave_OnEvent(arg1);
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>

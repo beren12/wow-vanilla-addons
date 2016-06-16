@@ -1,0 +1,47 @@
+## Title: Auctioneer
+## Notes: Displays item info and analyzes auction data. Use "/auctioneer scan" at AH to collect auction data. [3.9.0.1000 (Kangaroo)] This AddOn is licenced under the GNU GPL, see GPL.txt for details.
+##
+## Interface: 11200
+## LoadOnDemand: 1
+## Dependencies: EnhTooltip, Stubby
+## OptionalDeps: Informant, Khaos, ImprovedErrorFrame
+## SavedVariables: AuctionConfig, AuctionPrices, AuctionBids, AHSnapshot, AHSnapshotItemPrices
+##
+## Version: 3.9.0.1000 (Kangaroo)
+## Revision: $Id: Auctioneer.toc 979 2006-08-30 19:02:22Z mentalpower $
+## URL: http://auctioneeraddon.com/
+##
+
+..\Blizzard_AuctionUI\Blizzard_AuctionUITemplates.xml
+
+AucObjects.lua
+
+Babylonian\Babylonian.lua
+AucStrings.lua
+AucLocale.lua
+
+BalancedList.lua
+AucEvent.lua
+AHScanning.lua
+AucAPI.lua
+AucCommand.lua
+AucConvert.lua
+AucCore.lua
+AucFilter.lua
+AucScanner.lua
+AucStatistic.lua
+AucTooltip.lua
+AucUtil.lua
+AucStorage.lua
+AucAskPrice.lua
+Auctioneer.lua
+
+AuctioneerUI.lua
+AucBidManager.lua
+AucPostManager.lua
+
+Auctioneer.xml
+AuctioneerUI.xml
+ListTemplate.xml
+AuctionFrameSearch.xml
+AuctionFramePost.xml

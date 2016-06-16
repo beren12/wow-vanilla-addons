@@ -1,0 +1,7 @@
+## Interface: 30000
+## Author: Jebus
+## Title: AutoSave
+## Notes: Issues .save command when certain conditions are met
+## DefaultState: Enabled
+## Version: 3.0a
+AutoSave.xml

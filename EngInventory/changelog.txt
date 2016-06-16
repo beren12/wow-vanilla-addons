@@ -1,0 +1,59 @@
+20050809
+- This is my first mod, so go easy if some stuff is done wrong.  :)  Suggestions would be appriciated.
+20050810
+- Fixed issue where bank bags were being overridden as well.
+- Added localization file, need translators now.
+- Changed auto-layout code a bit.  Should look a bit cleaner.
+- Added some cryptic command line options that will be way too hard to use.
+20050811
+- Buttons!  Close button, lock/unlock, Hilight New Items (actually gray out not-new items),
+- Edit mode: Let's you move catagories arround just by clicking,  increase/decrease # of columns
+- Fixes to localization.
+- Added Roktarr's german translations.
+- Validation of saved config variables: corrupted values should be cleaned up, as well as bad input from /ei set
+- /ei set commands might work...  don't use it.
+20050812
+- Added right click menus (right click on main window, buttons, or numbered targets)
+- Window position is now saved at scale 1.00, so if you change the scale of the window, the anchor point won't move.  - (saved window position will be trashed in the config file)
+- /ei scale #.##
+- Hook for ToggleDropDownMenu() to fix popups from going off the screen.  I noticed that titan panel does this also, but it shouldn't affect anything.
+20050822
+* Tested KC_Items .. Seems to work all by itself.
+ KC_Items hooks the SetBagItem() function, which will make it work with anyone's inventory mod
+* Tested PackRat .. Can't make it work
+* Tested Sell Value .. I had some bugs in my code for calling it.  Fixed some stuff up, seems to work okay.
+* Tested ReagentHelper .. It was already working because of some code I copied and pasted from AllInOneInventory  :)
+* Tested ReagentInfo .. Works by itself.  It has an onupdate handler that checks the tooltip every 0.1 seconds, then adds the info if it needs to.
+- Completely recoded inventory update, sorting, and window update routines.  They're seperated, and somewhat independent now.  (So now it's possible to stop re-sorting when I want to)  They also won't be called if not needed, should improve performance a bit.
+- Changed the "item overrides" to store link values instead of item name.  (Your old settings will be wiped because of this change)
+- Created a configuration screen.  I did the scroll bar wrong, so you'll have to scroll by dragging the marker.
+*** Configuration is not complete! There's a ton more to add to it.
+- Changed default behavior to only resort when you open the bag.  If you leave the bag open, the positions won't change
+20050822b
+- Quick bug fix.  It should load without an error now.
+** Failed to fix all the bugs in time.  Don't download any of the 20050822 versions, you'll get errors.
+20050824
+- When you open a tradeskill window, it'll now create a list of items you make and the materials required.  When these items appear in your inventory, they'll be listed under various tradeskill sections.
+** You must open your trade skill windows at least once for it to grab the information.  The WoW API doesn't seem to give scripts the ability to get this information in any other way.
+- The mod will now scan your player class, and automatically reallocate some class items to be under another class.. For example:  If you're a warlock, your shards will end up in bar 15, and if you pick up a mage's "light feather", it won't be mixed in with your shards.  If you switch to a mage char, your light feather will appear where the shards were before.
+- When you equip items, the mod will remember it, and place those items under the EQUIPPED catagory. So now when you pick up some new soulbound item, you can tell it apart from all your backup gear and trinkets.
+- Now you have the ability to not use a catagory.  Go in the advanced config screen, find the matching line, and delete what's in the Catagory box.  For example:  If you don't want items that you produce via tradeskills to appear in "tradeskill_1_created" and "tradeskill_2_created", just remove those strings.  Warning: There's not much error checking at this time.  If you put a bad catagory in the box (or even just an empty space), it might crash.
+20060329
+- Updated TOC for 1.10
+- Fixed bug with gametooltip changes in 1.10
+- Integrated changes from the modified version of EngInventory posted on auctioneer's site
+- Fixed error with hunter training window
+
+
+* I'm not adding anything to this mod anymore - It works fine for me, and I much rather just play WoW *
+
+I regret not making a "bank version" of this mod.  How the current code is done, it would be impossible to just hack it in, so it would mean a full rewrite.
+
+
+Current serious bugs:
+- PM me if you find something serious and I'll post it here.
+
+
+They're not bugs, they're features:
+- Swapping items marks them both as new.  This is because you actually are swapping the items in the bags, but they get resorted and appear not to move.  To the sort routine, the item wasn't in that container/slot before, so it's a new item.  I can't think of an elegant solution arround this.  Just don't move items on top of eachother if the "new" tag bugs you.  :)  A possible solution is to track if an item being dropped in a bag is coming from another bag slot, and swap the items in the mod's cache at the same time.  It seems like a lot of trouble for a minor "bug".
+

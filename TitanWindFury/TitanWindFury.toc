@@ -1,0 +1,9 @@
+## Interface: 11000
+## Version: 1.3
+## Title: Titan - TitanWindFury
+## Notes: Displays WindFury stats
+## Author: Seaquest from DUSK Elite on The Maelstrom - http://ssb.bsitdesign.se
+## SavedVariables: TWFS
+## Dependencies: Titan
+## LoadWith: Titan
+TitanWindFury.xml
